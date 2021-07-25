@@ -66,7 +66,7 @@ components:
         password:
           title: Password
           type: string
-#          pattern: '^(?=.*[A-Z])(?=.*\d).{8,}$'
+          pattern: '^(?=.*[A-Z])(?=.*\d).{8,}$'
           minLength: 1
           maxLength: 128
         last_name:

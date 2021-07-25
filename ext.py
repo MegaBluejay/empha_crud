@@ -1,5 +1,7 @@
 import re
 
+__all__ = ['ResolverComp']
+
 class ResolverComp:
 
     def __init__(self, resolvers, default_resolver = None):
