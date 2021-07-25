@@ -1,0 +1,217 @@
+openapi: 3.0.0
+info:
+  title: User CRUD
+  description: Simple API for managing a set of users
+  version: '0.1'
+
+components:
+  schemas:
+    AuthToken:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          title: Username
+          type: string
+          minLength: 1
+        password:
+          title: Password
+          type: string
+          minLength: 1
+    ReadOnlyUser:
+      type: object
+      required: [username, is_active]
+      properties:
+        user_id:
+          title: ID
+          type: integer
+        username:
+          title: Username
+          type: string
+          pattern: '^[\w.@+-]+$'
+          minLength: 1
+          maxLength: 150
+        first_name:
+          title: First name
+          type: string
+          maxLength: 30
+        last_name:
+          title: Last name
+          type: string
+          maxLength: 150
+        is_active:
+          title: Active
+          type: boolean
+        last_login:
+          title: Last login
+          type: string
+          format: date-time
+        is_superuser:
+          title: Superuser status
+          type: boolean
+    WriteOnlyUser:
+      type: object
+      required: [username, password, is_active]
+      properties:
+        username:
+          title: Username
+          type: string
+          pattern: '^[\w.@+-]+$'
+          minLength: 1
+          maxLength: 150
+        first_name:
+          title: First name
+          type: string
+          maxLength: 30
+        password:
+          title: Password
+          type: string
+#          pattern: '^(?=.*[A-Z])(?=.*\d).{8,}$'
+          minLength: 1
+          maxLength: 128
+        last_name:
+          title: Last name
+          type: string
+          maxLength: 150
+        is_active:
+          title: Active
+          type: boolean
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: api.api_token_decode
+
+paths:
+  /api-token-auth/:
+    post:
+      summary: Get API token
+      tags:
+        - api_token_auth
+      operationId: api.api_token_create
+      requestBody:
+        description: Username & password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+      responses:
+        '200':
+          description: API token
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token]
+                properties:
+                  token:
+                    title: Token
+                    type: string
+  /api/users/:
+    get:
+      summary: Get list of users
+      tags:
+        - api
+      security:
+        - token: [read]
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReadOnlyUser'
+    post:
+      summary: Create new user
+      tags:
+        - api
+      security:
+        - token: [write]
+      requestBody:
+        description: User
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteOnlyUser'
+      responses:
+        '201':
+          description: Newly created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadOnlyUser'
+  /api/users/{userId}/:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get user
+      tags:
+        - api
+      security:
+        - token: [read]
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadOnlyUser'
+    put:
+      summary: Update user
+      tags:
+        - api
+      security:
+        - token: [write]
+      requestBody:
+        description: User
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteOnlyUser'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadOnlyUser'
+    patch:
+      summary: Partial update user
+      tags:
+        - api
+      security:
+        - token: [write]
+      requestBody:
+        description: User
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteOnlyUser'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadOnlyUser'
+    delete:
+      summary: Delete user
+      tags:
+        - api
+      security:
+        - token: [write]
+      responses:
+        '204':
+          description: User deleted
+
