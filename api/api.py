@@ -9,17 +9,36 @@ from flask.views import MethodView
 from jose import jwt, JWTError
 from werkzeug.exceptions import Unauthorized, NotFound, Forbidden
 
+from ext import hash_string
+
 __all__ = ['UsersView', 'api_token_create', 'api_token_decode']
 
 db = dataset.connect(row_type=Dict, ensure_schema=False)
-USERS : dataset.Table = db['users']
+init_db = int(environ.get('INIT_DB', '0'))
+
+if init_db:
+    db.create_table('users', primary_id='user_id')
+USERS = db['users']
+if init_db:
+    USERS.create_column('username', db.types.string(150), unique=True)
+    USERS.create_column('is_active', db.types.integer)
+    USERS.create_column('pass_hash', db.types.string(64))
+    USERS.create_column('is_superuser', db.types.boolean)
+    USERS.create_column('first_name', db.types.string(30))
+    USERS.create_column('last_name', db.types.string(150))
+    USERS.create_column('last_login', db.types.datetime)
+
+    USERS.insert({
+        'username': 'admin',
+        'is_active': True,
+        'pass_hash': hash_string('admin'),
+        'is_superuser': True
+    })
+    db.commit()
 
 JWT_SECRET = environ['JWT_SECRET']
 JWT_LIFETIME = 60*10
 JWT_ALGORITHM = 'HS256'
-
-def hash_string(s: str) -> str:
-    return sha256(s.encode('utf8')).hexdigest()
 
 def id_is_active(user_id):
     user = USERS.find_one(user_id=user_id)

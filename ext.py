@@ -1,6 +1,11 @@
+from hashlib import sha256
 import re
 
-__all__ = ['ResolverComp']
+__all__ = ['ResolverComp', 'hash_string']
+
+def hash_string(s: str) -> str:
+    return sha256(s.encode('utf8')).hexdigest()
+
 
 class ResolverComp:
 
