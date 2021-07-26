@@ -1,16 +1,20 @@
 from hashlib import sha256
 import re
 
-__all__ = ['ResolverComp', 'hash_string']
+__all__ = ["ResolverComp", "hash_string"]
+
 
 def hash_string(s: str) -> str:
-    return sha256(s.encode('utf8')).hexdigest()
+    return sha256(s.encode("utf8")).hexdigest()
+
 
 class ResolverComp:
-
-    def __init__(self, resolvers, default_resolver = None):
+    def __init__(self, resolvers, default_resolver=None):
         self.default_resolver = default_resolver
-        self.resolvers = {(re.compile(rgx) if isinstance(rgx,str) else rgx): res for rgx, res in resolvers.items()}
+        self.resolvers = {
+            (re.compile(rgx) if isinstance(rgx, str) else rgx): res
+            for rgx, res in resolvers.items()
+        }
 
     def resolve(self, operation):
         path = operation.path
