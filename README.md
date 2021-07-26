@@ -25,4 +25,6 @@ INIT_DB=1
 
 ### Running
 
-`python crud.py`
+`gunicorn crud:flask_app` or
+
+`python crud.py` for debug server
