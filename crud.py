@@ -1,12 +1,8 @@
-import logging
-
 import connexion
 from connexion.resolver import Resolver, MethodViewResolver
 
 from ext import ResolverComp
 from db import init_db
-
-logging.basicConfig(level=logging.INFO)
 
 init_db()
 app = connexion.App(__name__, specification_dir='openapi/')
@@ -19,4 +15,7 @@ app.add_api('crud_api.yaml',
             validate_responses=True,
             pythonic_params=True)
 
-app.run(port=8080)
+flask_app = app.app
+
+if __name__ == '__main__':
+    app.run(port=8080)

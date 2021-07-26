@@ -18,9 +18,10 @@ Optional: `INIT_DB`, either 0 or 1, default 0. When set to 1 will initialize a t
 
 To use an in-memory sqlite database set:
 
-`DATABASE_URL='sqlite:///file:db?mode=memory&cache=shared&uri=true'`
-
-`INIT_DB=1`
+```
+DATABASE_URL='sqlite:///file:db?mode=memory&cache=shared&uri=true'
+INIT_DB=1
+```
 
 ### Running
 
