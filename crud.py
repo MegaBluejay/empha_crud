@@ -1,11 +1,14 @@
 import logging
 
 import connexion
-from ext import ResolverComp
 from connexion.resolver import Resolver, MethodViewResolver
+
+from ext import ResolverComp
+from db import init_db
 
 logging.basicConfig(level=logging.INFO)
 
+init_db()
 app = connexion.App(__name__, specification_dir='openapi/')
 options = {'swagger_ui': True}
 resolver = ResolverComp({'^/api/': MethodViewResolver('api')}, Resolver())

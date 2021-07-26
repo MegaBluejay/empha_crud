@@ -6,7 +6,6 @@ __all__ = ['ResolverComp', 'hash_string']
 def hash_string(s: str) -> str:
     return sha256(s.encode('utf8')).hexdigest()
 
-
 class ResolverComp:
 
     def __init__(self, resolvers, default_resolver = None):
