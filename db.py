@@ -5,6 +5,8 @@ from addict import Dict
 
 from ext import hash_string
 
+__all__ = ['connect_db', 'init_db']
+
 def connect_db():
     return dataset.connect(row_type=Dict, ensure_schema=False)
 

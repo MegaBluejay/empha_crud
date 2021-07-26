@@ -8,7 +8,7 @@ from jose import jwt, JWTError
 from werkzeug.exceptions import Unauthorized, NotFound, Forbidden
 
 from db import connect_db
-from ext import hash_string
+from util import hash_string
 
 __all__ = ['UsersView', 'api_token_create', 'api_token_decode']
 

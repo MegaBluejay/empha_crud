@@ -1,7 +1,7 @@
 import connexion
 from connexion.resolver import Resolver, MethodViewResolver
 
-from ext import ResolverComp
+from util import ResolverComp
 from db import init_db
 
 init_db()
